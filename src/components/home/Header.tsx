@@ -1,6 +1,7 @@
 'use client'
 import React, { useState } from 'react';
 import { UserAuthButton } from './auth-user-button';
+import Link from 'next/link';
 
 const Header: React.FC = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -8,7 +9,9 @@ const Header: React.FC = () => {
   return (
     <header className="bg-teal-50 shadow-sm sticky top-0 z-50">
       <div className="container mx-auto px-4 py-4 flex justify-between items-center">
-        <div className="text-2xl font-bold text-teal-600">MeetBot</div>
+        <div className="text-2xl font-bold text-teal-600">
+          <Link href={'/'}>MeetBot</Link>
+        </div>
         
         <div className="md:hidden">
           <button 

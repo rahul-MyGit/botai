@@ -1,9 +1,12 @@
 import React from 'react';
 import Header from './Header';
 import Footer from './Footer';
-import Button from './ButtonHome';
+import { auth } from '@/lib/auth';
+import MeetLinkModal from '../MeetLinkModal';
 
-const Home: React.FC = () => {
+const Home: React.FC = async () => {
+  const session = await auth()
+
   return (
     <div className="min-h-screen flex flex-col">
       <Header />
@@ -19,9 +22,7 @@ const Home: React.FC = () => {
                 Join, record, and get insights from your Google Meet sessions with AI-powered precision and ease.
               </p>
               <div className="pt-4">
-                <Button className="text-teal-600 bg-teal-400 hover:bg-gray-100 text-base md:text-lg px-8 py-3">
-                  Try MeetBot Now
-                </Button>
+                <MeetLinkModal session={session}/>
               </div>
             </div>
           </div>
@@ -103,9 +104,8 @@ const Home: React.FC = () => {
             <p className="text-xl mb-10 max-w-xl mx-auto text-white/90">
               Join thousands of professionals leveraging AI to make meetings more productive and insightful.
             </p>
-            <Button className="bg-teal-400 text-teal-600 hover:bg-gray-100 px-10 py-4 text-lg">
-              Get Started for Free
-            </Button>
+
+            <MeetLinkModal session={session}/>
           </div>
         </section>
       </main>
