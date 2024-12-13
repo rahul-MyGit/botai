@@ -1,6 +1,5 @@
 'use client'
 import React, { useState } from 'react';
-import Button from './ButtonHome';
 import { UserAuthButton } from './auth-user-button';
 
 const Header: React.FC = () => {
