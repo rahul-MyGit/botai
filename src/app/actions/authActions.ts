@@ -8,6 +8,6 @@ export async function googleSignInAction() {
 }
 
 export async function userSignOutAction() {
-    await signOut({ redirectTo: "/" });
+    await signOut({ redirectTo: "/"});
     return;
 }

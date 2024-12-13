@@ -10,13 +10,14 @@ import {
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { useSession } from "next-auth/react";
 import { googleSignInAction, userSignOutAction } from "@/app/actions/authActions";
+import { useRouter } from "next/navigation";
 
 export function UserAuthButton() {
     const { data: session } = useSession();
-
-    console.log('after', session)
+    const router = useRouter();
 
     if (session && session?.user) {
+        
         return (
             <DropdownMenu>
                 <DropdownMenuTrigger asChild>
@@ -32,7 +33,10 @@ export function UserAuthButton() {
                         <div className="font-medium">{session.user.name}</div>
                         <div className="text-sm text-muted-foreground">{session.user.email}</div>
                     </DropdownMenuItem>
-                            <DropdownMenuItem onClick={userSignOutAction} className="text-red-600 cursor-pointer">
+                            <DropdownMenuItem onClick={async () => {
+                            await userSignOutAction();
+                            router.refresh();
+                        }} className="text-red-600 cursor-pointer">
                                 Log out
                             </DropdownMenuItem>
                 </DropdownMenuContent>
