@@ -1,11 +1,10 @@
-import { Button } from "@/components/ui/button";
-import Image from "next/image";
+import  LandingPage  from "@/components/home/Home";
 
 export default function Home() {
   return (
     <>
-    <div>
-      <Button>Cool</Button>
+    <div className="">
+      <LandingPage />
     </div>
     </>
   );
