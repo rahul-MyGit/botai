@@ -36,6 +36,8 @@ const MeetLinkModal: React.FC<MeetLinkModalProps> = ({ session }) => {
       return;
     }
 
+    //TODO: create a bot in selenium which will start a chrome browser and hit the google meet url and enter it that  
+
     try {
       
       toast.success('Meeting URL submitted successfully');
