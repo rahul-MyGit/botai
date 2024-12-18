@@ -1,10 +1,12 @@
 'use client';
 
 import React, { useState } from 'react';
-import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { toast } from 'sonner';
+import {startMeetBot} from '@/app/actions/meetBot';
+// import { startMeetBot, endMeetBot } from '@/actions/meet-bot';
 
 interface MeetLinkModalProps {
   session: any;
@@ -13,6 +15,7 @@ interface MeetLinkModalProps {
 const MeetLinkModal: React.FC<MeetLinkModalProps> = ({ session }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [meetingUrl, setMeetingUrl] = useState('');
+  const [botSession, setBotSession] = useState<any>(null);
 
   const handleClick = () => {
     if (!session || !session?.user) {
@@ -32,31 +35,69 @@ const MeetLinkModal: React.FC<MeetLinkModalProps> = ({ session }) => {
 
     const urlPattern = /^(https?:\/\/)?(meet\.google\.com\/[a-z0-9-]+)$/i;
     if (!urlPattern.test(meetingUrl)) {
-      toast.error('Please enter a valid Google Meet URL');
+      toast.error('Please enter a valid Google Meet URL'); 
       return;
     }
 
-    //TODO: create a bot in selenium which will start a chrome browser and hit the google meet url and enter it that  
-
     try {
-      
-      toast.success('Meeting URL submitted successfully');
-      setIsOpen(false);
-      setMeetingUrl('');
+      const result =  await startMeetBot(meetingUrl);
+
+      if (result.success) {
+        toast.success('Bot joined meeting successfully');
+        setBotSession(result.session);
+        setIsOpen(false);
+        
+        // window.open(meetingUrl, '_blank');
+      } else {
+        const errorMessage = typeof result.message === 'string' ? result.message : 'Failed to start meet bot';
+        toast.error(errorMessage);
+      }
     } catch (error) {
-      toast.error('Failed to submit meeting URL');
+      toast.error('Failed to start meet bot');
       console.error(error);
+    } finally {
+      setMeetingUrl('')
     }
   };
 
+  // const handleEndMeeting = async () => {
+  //   try {
+  //     const result = await endMeetBot();
+
+  //     if (result.success) {
+  //       toast.success('Meet bot session ended');
+  //       setBotSession(null);
+  //     } else {
+  //       toast.error(result.message || 'Failed to end meet bot session');
+  //     }
+  //   } catch (error) {
+  //     toast.error('Error ending meet bot session');
+  //     console.error(error);
+  //   } finally {
+  //     setMeetingUrl('');
+  //   }
+  // };
+
   return (
     <>
-      <Button 
-        onClick={handleClick} 
-        className="text-teal-600 bg-white hover:bg-gray-100 text-base md:text-lg px-8 py-3"
-      >
-        Try MeetBot Now
-      </Button>
+      <div className="flex items-center space-x-4">
+        <Button 
+          onClick={handleClick} 
+          className="text-teal-600 bg-white hover:bg-gray-100 text-base md:text-lg px-8 py-3"
+        >
+          Try MeetBot Now
+        </Button>
+        
+        {/* {botSession && (
+          <Button 
+            onClick={handleEndMeeting}
+            variant="destructive"
+            className="px-8 py-3"
+          >
+            End Meeting Bot
+          </Button>
+        )} */}
+      </div>
 
       <Dialog open={isOpen} onOpenChange={setIsOpen}>
         <DialogContent className='bg-teal-400'>
